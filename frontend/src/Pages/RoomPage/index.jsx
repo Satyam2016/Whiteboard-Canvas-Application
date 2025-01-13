@@ -5,13 +5,14 @@ import { FaPencil } from "react-icons/fa6";
 import { FaEraser } from "react-icons/fa";
 import { IoIosColorPalette } from "react-icons/io";
 import { FaShapes } from "react-icons/fa6";
+import WhiteBoard from "../../Components/Whiteboard";
 
 const RoomPage = () => {
      const [tool, setTool] = useState("pencil");
 
      return (
           <div className="bg-slate-400 flex flex-col h-screen items-center">
-               <div className="bg-white flex justify-between items-center m-2 rounded-full border-slate-950 font-mono text-1xl h-12 w-4/6 text-gray-500  px-2">
+               <div className="bg-white flex justify-between items-center m-2 rounded-full  font-mono text-1xl h-12 w-4/6 text-gray-500  px-2 border-gray-500  border-1">
                     
                     <div className="flex gap-2 justify-start items-center px-2">
                          <IoIosUndo
@@ -40,6 +41,10 @@ const RoomPage = () => {
                     </button>
                         
                     </div>
+               </div>
+
+               <div className="bg-white flex flex-col justify-center items-center border-red-600 rounded-lg   h-5/6 w-5/6 p-0 ">
+                    < WhiteBoard />
                </div>
           </div>
      );
