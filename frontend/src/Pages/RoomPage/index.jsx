@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { IoIosUndo } from "react-icons/io";
 import { IoIosRedo } from "react-icons/io";
 import { FaPencil } from "react-icons/fa6";
@@ -8,12 +8,18 @@ import { FaShapes } from "react-icons/fa6";
 import WhiteBoard from "../../Components/Whiteboard";
 
 const RoomPage = () => {
+     const canvasRef = useRef(null);
+     const ctxRef = useRef(null);
+
+
      const [tool, setTool] = useState("pencil");
+     const [color, setColor] = useState("#000000");
+     const [elements, setElements] = useState([]);
 
      return (
           <div className="bg-slate-400 flex flex-col h-screen items-center">
                <div className="bg-white flex justify-between items-center m-2 rounded-full  font-mono text-1xl h-12 w-4/6 text-gray-500  px-2 border-gray-500  border-1">
-                    
+
                     <div className="flex gap-2 justify-start items-center px-2">
                          <IoIosUndo
                               className="cursor-pointer h-5 w-5"
@@ -23,28 +29,29 @@ const RoomPage = () => {
                          />
                     </div>
                     <div className="flex justify-center items-center gap-2 ">
-                    <FaPencil
-                    className="cursor-pointer h-5 w-5" />
-                    <FaEraser
-                    className="cursor-pointer h-5 w-5" />
-                    <IoIosColorPalette 
-                    className="cursor-pointer h-5 w-5"
-                    />
-                    <FaShapes
-                    className="cursor-pointer h-5 w-5" />
+                         <FaPencil
+                              className="cursor-pointer h-5 w-5" />
+                         <FaEraser
+                              className="cursor-pointer h-5 w-5" />
+                         <IoIosColorPalette
+                              className="cursor-pointer h-5 w-5"
+                         />
+                         <FaShapes
+                              className="cursor-pointer h-5 w-5" />
 
                     </div>
                     <div className="flex gap-1 justify-end">
-                    <button className="bg-red-500 px-2 rounded-full text-white h-8"
-                    >
-                   Clear
-                    </button>
-                        
+                         <button className="bg-red-500 px-2 rounded-full text-white h-8"
+                         >
+                              Clear
+                         </button>
+
                     </div>
                </div>
 
                <div className="bg-white flex flex-col justify-center items-center border-red-600 rounded-lg   h-5/6 w-5/6 p-0 ">
-                    < WhiteBoard />
+                    < WhiteBoard canvasRef={canvasRef} ctxRef={ctxRef} elements={elements}
+                         setElements={setElements} />
                </div>
           </div>
      );
