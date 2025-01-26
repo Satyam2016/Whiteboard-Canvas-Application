@@ -14,7 +14,12 @@ app.get('/', (req, res) => {
 );
 
 io.on('connection', (socket) => {
-     console.log('a user connected');
+     socket.on('UserJoined', (roomData) => {
+          console.log('UserJoined', roomData);
+          socket.join(roomData.roomId);
+          socket.emit("userIsJoined", {success: true});
+     }
+     );
 });
 
 const port = process.env.PORT || 5000;
