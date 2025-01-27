@@ -11,6 +11,7 @@ const WhiteBoard = ({
     setElements,
     color,
     tool,
+    user,
 }) => {
     const [isDrawing, setIsDrawing] = useState(false);
 
@@ -34,6 +35,9 @@ const WhiteBoard = ({
     useLayoutEffect(() => {
         const roughCanvas = rough.canvas(canvasRef.current);
 
+        if(canvas){
+
+        
         if (elements.length > 0) {
             ctxRef.current.clearRect(
                 0,
@@ -84,6 +88,7 @@ const WhiteBoard = ({
                 );
             }
         });
+    }
     }, [elements]);
 
     const handleMouseDown = (e) => {
@@ -183,6 +188,15 @@ const WhiteBoard = ({
     const handleMouseUp = () => {
         setIsDrawing(false);
     };
+
+    if(!user?.presenter){
+        return (
+            <div className="bg-white rounded-lg border-gray-500 border-1 p-0 overflow-hidden h-100 w-100 ">
+               <img src="" alt="Real TIme sharing" 
+               className="w-auto h-100" />
+            </div>
+        ); 
+    }
 
     return (
         <div
