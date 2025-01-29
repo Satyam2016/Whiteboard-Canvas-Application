@@ -1,6 +1,6 @@
 import rough from "roughjs";
 import React, { useEffect, useState, useLayoutEffect } from "react";
-import { use } from "react";
+
 
 const roughGenerator = rough.generator();
 
@@ -12,8 +12,32 @@ const WhiteBoard = ({
     color,
     tool,
     user,
+    socket
 }) => {
+
+    const [img, setImg] = useState(null);
+
+    useEffect(()=>{
+        socket.on("whiteboardDataResponse", (data)=>{
+            setImg(data.imgURL);
+        });
+    },[]);
+    
+    if(!user?.presenter){
+        return (
+            <div className="bg-white rounded-lg border-gray-500 border-1 p-0 overflow-hidden h-100 w-100">
+            <img src={img} alt="Real TIme sharing" 
+            style={{width: "280%", 
+                height: window.innerHeight * 2}}
+            />
+            </div>
+        ); 
+    }
+    
     const [isDrawing, setIsDrawing] = useState(false);
+   
+
+    
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -33,11 +57,9 @@ const WhiteBoard = ({
      }, [color]);
 
     useLayoutEffect(() => {
+        if(canvasRef){
         const roughCanvas = rough.canvas(canvasRef.current);
 
-        if(canvas){
-
-        
         if (elements.length > 0) {
             ctxRef.current.clearRect(
                 0,
@@ -88,6 +110,10 @@ const WhiteBoard = ({
                 );
             }
         });
+
+        const canvasImage = canvasRef.current.toDataURL();
+        socket.emit("whiteboardData", canvasImage );
+
     }
     }, [elements]);
 
@@ -189,14 +215,7 @@ const WhiteBoard = ({
         setIsDrawing(false);
     };
 
-    if(!user?.presenter){
-        return (
-            <div className="bg-white rounded-lg border-gray-500 border-1 p-0 overflow-hidden h-100 w-100 ">
-               <img src="" alt="Real TIme sharing" 
-               className="w-auto h-100" />
-            </div>
-        ); 
-    }
+    
 
     return (
         <div

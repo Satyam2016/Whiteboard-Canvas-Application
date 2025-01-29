@@ -6,7 +6,7 @@ import { TbTextResize } from "react-icons/tb";
 import WhiteBoard from "../../Components/Whiteboard";
 import "./index.css";
 
-const RoomPage = ({ user }) => {
+const RoomPage = ({ user, socket , users}) => {
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
 
@@ -26,6 +26,8 @@ const RoomPage = ({ user }) => {
     "#E74C3C",
     "#7F8C8D",
   ];
+
+  const [openedUserTab, setOpenedUserTab] = useState(false);
 
   const clearCanvas = () => {
     const canvas = canvasRef.current;
@@ -58,6 +60,22 @@ const RoomPage = ({ user }) => {
 
   return (
     <div className="bg-slate-400 flex flex-col h-screen items-center">
+    <button type="button" claaName="btn btn-dark position-absolute top-0 left-0 bg-blue-200" onClick={() => setOpenedUserTab(!openedUserTab)}>
+          Users
+    </button>
+    {openedUserTab && (
+      <div className="bg-white flex flex-col items-center m-2 rounded-lg font-mono text-1xl h-12 w-4/6 text-gray-500 px-2 border-gray-500 border-1">
+        <h1 className="text-2xl text-black font-mono">Users</h1>
+        {users.map((usr) => (
+          <div key={usr.userId} className="flex justify-between items-center w-full">
+            <p>{usr.name} {user && user.userId===usr.userId  && "(You)" }</p>
+            <p>{usr.presenter ? "Presenter" : "Viewer"}</p>
+          </div>
+        ))}
+      </div>
+    )
+    }
+    <h1 className="text-3xl text-white font-mono">Room: {user?.roomId}  Users: {users?.length} </h1>
       {/* Toolbar */}
       {user?.presenter && (
         <div className="bg-white flex justify-between items-center m-2 rounded-full font-mono text-1xl h-12 w-4/6 text-gray-500 px-2 border-gray-500 border-1">
@@ -163,6 +181,8 @@ const RoomPage = ({ user }) => {
           tool={tool}
           color={color}
           user={user}
+          socket={socket}
+         
         />
       </div>
     </div>
