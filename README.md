@@ -12,5 +12,31 @@ Designed and built a real-time AI-powered collaborative whiteboard using React, 
 
 ✅ Multi-Device Compatibility – Optimized for desktop & tablet use with touch and stylus support.
 
+✅ Upcoming AI Features – Handwriting recognition & shape auto-correction using AI models.
+
 
 Future enhancements include WebRTC-based voice/video chat, AI-assisted sketch enhancement, and exporting whiteboard sessions as PDFs.
+
+
+
+📌 Tech Stack:
+
+Frontend:
+
+✅ React.js – Core framework for UI development
+
+✅ Tailwind CSS – For responsive styling
+
+✅ Rough.js – Hand-drawn style shapes & freehand drawing
+
+
+Backend & Real-Time Collaboration:
+
+✅ Firebase Firestore – Real-time database for drawing updates
+
+✅ Firebase Authentication – Secure login & user session management
+
+✅ Socket.io (WebSockets) – Ensures ultra-low latency collaboration
+
+✅ Express.js (Optional for API Handling) – Manages backend services
+
