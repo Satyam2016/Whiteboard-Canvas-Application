@@ -47,7 +47,7 @@ export default function CreateRoomForm({
           console.error("Error creating room:", error);
         }
     
-    // Handle room creation logic
+  
   }
 
   return (

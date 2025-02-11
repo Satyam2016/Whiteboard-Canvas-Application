@@ -1,25 +1,67 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { db } from "../firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function JoinRoomForm() {
   const [roomId, setRoomId] = useState("");
+  const navigate = useNavigate();
 
   // Join an existing room (Check if Room ID exists)
   const joinRoom = async () => {
-     if (!joinRoomId.trim()) return;
-     try {
-       const q = query(collection(db, "Rooms"), where("__name__", "==", roomId));
-       const querySnapshot = await getDocs(q);
-       if (!querySnapshot.empty) {
-         alert("Joined Room Successfully!");
-       } else {
-         alert("Room ID not found!");
-       }
-       setJoinRoomId("");
-     } catch (error) {
-       console.error("Error joining room:", error);
-     }
-   };
+    if (!roomId.trim()) {
+      Swal.fire({
+        icon: "warning",
+        title: "Invalid Room ID",
+        text: "Please enter a valid Room ID.",
+        timer: 3500, // Auto close after 3.5 seconds
+        timerProgressBar: true, // Show progress bar
+        showConfirmButton: false,
+      });
+      return;
+    }
+
+    try {
+      const roomRef = doc(db, "Rooms", roomId);
+      const roomSnap = await getDoc(roomRef);
+
+      if (roomSnap.exists()) {
+        Swal.fire({
+          icon: "success",
+          title: "Room Found!",
+          text: "Redirecting you to the room...",
+          timer: 3000, // Auto close after 3 seconds
+          timerProgressBar: true,
+          showConfirmButton: false,
+        });
+
+        setTimeout(() => {
+          navigate(`/room/${roomId}`);
+        }, 3000);
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Room Not Found",
+          text: "The Room ID you entered does not exist!",
+          timer: 4000, // Auto close after 4 seconds
+          timerProgressBar: true,
+          showConfirmButton: false,
+        });
+      }
+    } catch (error) {
+      console.error("Error checking room ID:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Something went wrong. Please try again later!",
+        timer: 4000, // Auto close after 4 seconds
+        timerProgressBar: true,
+        showConfirmButton: false,
+      });
+    }
+  };
 
   return (
     <motion.div
