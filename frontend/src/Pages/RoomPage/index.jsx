@@ -6,7 +6,7 @@ import { TbTextResize } from "react-icons/tb";
 import WhiteBoard from "../../Components/Whiteboard";
 import "./index.css";
 
-const RoomPage = ({ user, socket , users}) => {
+const RoomPage = ({ user, socket }) => {
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
 
@@ -26,8 +26,6 @@ const RoomPage = ({ user, socket , users}) => {
     "#E74C3C",
     "#7F8C8D",
   ];
-
-  const [openedUserTab, setOpenedUserTab] = useState(false);
 
   const clearCanvas = () => {
     const canvas = canvasRef.current;
@@ -60,25 +58,39 @@ const RoomPage = ({ user, socket , users}) => {
 
   return (
     <div className="bg-slate-400 flex flex-col h-screen items-center">
-    <button type="button" claaName="btn btn-dark position-absolute top-0 left-0 bg-blue-200" onClick={() => setOpenedUserTab(!openedUserTab)}>
-          Users
-    </button>
-    {openedUserTab && (
-      <div className="bg-white flex flex-col items-center m-2 rounded-lg font-mono text-1xl h-12 w-4/6 text-gray-500 px-2 border-gray-500 border-1">
-        <h1 className="text-2xl text-black font-mono">Users</h1>
-        {users.map((usr) => (
-          <div key={usr.userId} className="flex justify-between items-center w-full">
-            <p>{usr.name} {user && user.userId===usr.userId  && "(You)" }</p>
-            <p>{usr.presenter ? "Presenter" : "Viewer"}</p>
-          </div>
-        ))}
-      </div>
-    )
-    }
-    <h1 className="text-3xl text-white font-mono">Room: {user?.roomId}  Users: {users?.length} </h1>
+      {/* User Toggle Button */}
+      {/* 
+      <button
+        type="button"
+        className="btn btn-dark position-absolute top-0 left-0 bg-blue-200"
+        onClick={() => setOpenedUserTab(!openedUserTab)}
+      >
+        Users
+      </button>
+      {openedUserTab && (
+        <div className="bg-white flex flex-col items-center m-2 rounded-lg font-mono text-1xl h-12 w-4/6 text-gray-500 px-2 border-gray-500 border">
+          <h1 className="text-2xl text-black font-mono">Users</h1>
+          {users.map((usr) => (
+            <div key={usr.userId} className="flex justify-between items-center w-full">
+              <p>
+                {usr.name} {user && user.userId === usr.userId && "(You)"}
+              </p>
+              <p>{usr.presenter ? "Presenter" : "Viewer"}</p>
+            </div>
+          ))}
+        </div>
+      )}
+      */}
+
+      {/* Whiteboard Header */}
+      {/* 
+      <h1 className="text-3xl text-white font-mono">
+        Room: {user?.roomId} Users: {users?.length}
+      </h1>
+      */}
+
       {/* Toolbar */}
-      {user?.presenter && (
-        <div className="bg-white flex justify-between items-center m-2 rounded-full font-mono text-1xl h-12 w-4/6 text-gray-500 px-2 border-gray-500 border-1">
+        <div className="bg-white flex justify-between items-center m-2 rounded-full font-mono text-1xl h-12 w-4/6 text-gray-500 px-2 border-gray-500 border">
           {/* Undo/Redo */}
           <div className="flex gap-2 justify-start items-center px-2">
             <IoIosUndo
@@ -131,12 +143,12 @@ const RoomPage = ({ user, socket , users}) => {
               />
               {showColorPicker && (
                 <div className="color-picker-dropdown">
-                  {availableColors.map((color) => (
+                  {availableColors.map((clr) => (
                     <div
-                      key={color}
+                      key={clr}
                       className="color-option"
-                      style={{ backgroundColor: color }}
-                      onClick={() => handleColorSelect(color)}
+                      style={{ backgroundColor: clr }}
+                      onClick={() => handleColorSelect(clr)}
                     ></div>
                   ))}
                 </div>
@@ -169,7 +181,7 @@ const RoomPage = ({ user, socket , users}) => {
             </button>
           </div>
         </div>
-      )}
+  
 
       {/* Whiteboard */}
       <div className="bg-white flex flex-col justify-center items-center border-red-600 rounded-lg h-5/6 w-5/6 p-0">
@@ -180,9 +192,7 @@ const RoomPage = ({ user, socket , users}) => {
           setElements={setElements}
           tool={tool}
           color={color}
-          user={user}
           socket={socket}
-         
         />
       </div>
     </div>

@@ -23,16 +23,16 @@ const WhiteBoard = ({
         });
     },[]);
     
-    if(!user?.presenter){
-        return (
-            <div className="bg-white rounded-lg border-gray-500 border-1 p-0 overflow-hidden h-100 w-100">
-            <img src={img} alt="Real TIme sharing" 
-            style={{width: "280%", 
-                height: window.innerHeight * 2}}
-            />
-            </div>
-        ); 
-    }
+    // if(false){
+    //     return (
+    //         <div className="bg-white rounded-lg border-gray-500 border-1 p-0 overflow-hidden h-100 w-100">
+    //         <img src={img} alt="Real TIme sharing" 
+    //         style={{width: "280%", 
+    //             height: window.innerHeight * 2}}
+    //         />
+    //         </div>
+    //     ); 
+    // }
     
     const [isDrawing, setIsDrawing] = useState(false);
    
