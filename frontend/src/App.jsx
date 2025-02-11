@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import Forms from './components/Forms'
 import RoomPage from './Pages/RoomPage'
 import Dashboard from './Pages/Dashboard'
 import Home from './Components/LandingPage'
@@ -41,21 +40,11 @@ function App() {
     })
   }, []);
 
-  const uuid=()=>{
-    var s4=()=>{
-      return Math.floor(((1+Math.random())*0x10000) | 0).toString(16).substring(1);
-    }
-
-    return s4()+s4()+"-"+s4()+"-"+s4()+"-"+s4()+"-"+s4()+s4()+s4();
-  }
 
   return (
     < div >
       <Routes>
-        <Route path="/join" element={<Forms uuid={uuid}   socket={socket} setUser={setUser} />} />
         <Route path="/" element={<Home />} />
-        <Route path="/loginSignup" element={<LoginSignup />} />
-       
         <Route path="/loginSignup" element={<LoginSignup />} />
         <Route
           path="/dashboard"
@@ -66,7 +55,12 @@ function App() {
           }
         />
    
-        <Route path="/:roomId"  element={<RoomPage user={user} socket={socket} users={users} />} />
+        <Route path="/room/:roomid"  element={
+          <ProtectedRoute>
+          <RoomPage user={user} socket={socket} users={users} />
+          </ProtectedRoute>
+        }
+         />
       </Routes>
     </div>
   )
