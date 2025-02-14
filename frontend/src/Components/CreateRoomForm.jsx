@@ -5,6 +5,7 @@ import uuid from "../uuid"
 import {db} from "../firebaseConfig"
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { useAuth } from "../AuthContext";
+import { reload } from "firebase/auth";
 
 
 export default function CreateRoomForm({
@@ -43,12 +44,15 @@ export default function CreateRoomForm({
           setRooms([...rooms, { id: docRef.id, name: roomName, owner: user.uid, members: [user.uid] }]);
           setRoomName("");
           setRoomId("");
+          window.location.reload();
+          
         } catch (error) {
           console.error("Error creating room:", error);
         }
     
   
   }
+
 
   return (
     <motion.div

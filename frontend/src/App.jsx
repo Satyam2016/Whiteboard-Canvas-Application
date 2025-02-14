@@ -7,40 +7,9 @@ import LoginSignup from './Components/Login'
 import ProtectedRoute from './ProtectedRoute'
 import { Route , Routes } from 'react-router-dom' 
 
-import io from "socket.io-client"
-
-const server ="http://localhost:5000"
-const connectionOptions={
-  "force new connection":true,
-  "reconnectionAttempts":"Infinity",
-  "timeout":10000,
-  "transports":["websocket"]
-}
-const socket =io(server, connectionOptions)
-
-
 
 function App() {
-
-  const [user, setUser] = useState(null);
-  const [users, setUsers] = useState([]);
-
-  useEffect(()=>{
-    socket.on('userIsJoined', (data)=>{
-     if(data.success){
-       console.log("User Joined")
-        setUsers(data.users);
-     }
-     else{
-        console.log("User not Joined")
-     }
-    })
-    socket.on('allUsers', (data)=>{
-      setUsers(data);
-    })
-  }, []);
-
-
+ 
   return (
     < div >
       <Routes>
@@ -57,7 +26,7 @@ function App() {
    
         <Route path="/room/:roomid"  element={
           <ProtectedRoute>
-          <RoomPage user={user} socket={socket} users={users} />
+          <RoomPage />
           </ProtectedRoute>
         }
          />

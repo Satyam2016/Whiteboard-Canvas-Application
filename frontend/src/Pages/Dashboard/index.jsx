@@ -46,45 +46,54 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
       {/* Navbar */}
-      <nav className="flex justify-between items-center p-4 bg-gray-800 rounded-xl shadow-md">
-        <div className="relative">
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center space-x-2 hover:opacity-80 transition duration-200"
-          >
-            <img
-              src={user?.photoURL || getInitialsAvatar()}
-              alt="User Avatar"
-              className="w-10 h-10 rounded-full border border-gray-600 shadow-md"
-            />
-            <span className="hidden sm:inline-block font-semibold">
-              {user?.displayName || "User"}
-            </span>
-          </button>
+      <nav className="flex justify-between items-center p-4 bg-gray-800 rounded-xl shadow-md transition-all duration-300 hover:bg-gray-700 hover:shadow-lg">
+        <motion.div 
+          className="relative bg-gray-800"
+          whileHover={{ scale: 1.05 }}
+        >
+        <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center space-x-2 p-2 rounded-lg transition duration-300 bg-gray-800 hover:bg-gray-700 hover:scale-105"
+      >
+        <img
+          src={user?.photoURL || getInitialsAvatar()}
+          alt="User Avatar"
+          className="w-10 h-10 rounded-full border border-gray-600 shadow-md"
+        />
+        <span className="hidden sm:inline-block font-semibold text-white">
+          {user?.displayName || "User"}
+        </span>
+      </button>
+      
 
           {isOpen && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.2 }}
-              className="absolute left-0 mt-2 w-48 bg-gray-700 text-white rounded-lg shadow-lg border border-gray-600"
+              className="absolute left-0 mt-2 w-48 bg-gray-800 text-white rounded-lg shadow-lg borderbg-gray-800  hover:scale-105"
             >
               <button
-                className="block px-4 py-2 hover:bg-gray-600 w-full text-left transition duration-200"
+                className="block px-4 py-2  w-full text-left transition duration-200 bg-gray-400 hover:bg-gray-600 hover:scale-105"
                 onClick={() => setIsOpen(false)}
               >
                 Edit Profile
               </button>
               <button
-                className="block px-4 py-2 hover:bg-red-600 w-full text-left transition duration-200"
+                className="block px-4 py-2 w-full text-left transition duration-200 bg-gray-400 hover:bg-gray-700 hover:scale-105"
                 onClick={logout}
               >
                 Logout
               </button>
             </motion.div>
           )}
-        </div>
-        <h1 className="text-2xl font-bold tracking-wide">✨ Whiteboard App</h1>
+        </motion.div>
+        <motion.h1 
+          className="text-2xl font-bold tracking-wide" 
+          whileHover={{ scale: 1.1, color: "#facc15" }}
+        >
+          ✨ Whiteboard App
+        </motion.h1>
       </nav>
 
       {/* Dashboard Sections */}

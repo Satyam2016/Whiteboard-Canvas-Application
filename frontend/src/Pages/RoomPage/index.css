@@ -30,3 +30,53 @@
      transform: scale(1.2);
    }
    
+
+   .toolbar-container {
+    position: relative;
+    z-index: 10;
+    background: white;
+  }
+  
+  .whiteboard-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+   }  
+
+  /* Subtle Grid Background */
+.whiteboard-container {
+  background-color: #1a1a1a; /* Dark background */
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Toolbar Dark Mode */
+.toolbar-container {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border: 1px solid #444;
+}
+
+/* Button Adjustments */
+button {
+  background-color: #d9534f;
+}
+
+button:hover {
+  background-color: #c9302c;
+}
+
+/* Active Tool Highlight */
+.toolbar-container svg {
+  color: #b0b0b0;
+}
+
+.toolbar-container svg:hover,
+.toolbar-container svg.text-blue-400 {
+  color: #4db8ff;
+}

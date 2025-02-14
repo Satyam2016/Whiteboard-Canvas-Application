@@ -4,9 +4,24 @@ import { FaPencil, FaEraser, FaShapes } from "react-icons/fa6";
 import { MdLineWeight } from "react-icons/md";
 import { TbTextResize } from "react-icons/tb";
 import WhiteBoard from "../../Components/Whiteboard";
+import { useAuth } from "../../AuthContext";
 import "./index.css";
 
-const RoomPage = ({ user, socket }) => {
+import io from "socket.io-client"
+
+const server = "http://localhost:5000"
+const connectionOptions = {
+  "force new connection": true,
+  "reconnectionAttempts": "Infinity",
+  "timeout": 10000,
+  "transports": ["websocket"]
+}
+
+const socket = io(server, connectionOptions)
+
+const RoomPage = () => {
+  const { user } = useAuth();
+  console.log("inside roomc" , user)
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
 
@@ -17,20 +32,22 @@ const RoomPage = ({ user, socket }) => {
   const [history, setHistory] = useState([]);
 
   const availableColors = [
-    "#000000",
-    "#FF5733",
-    "#33FF57",
-    "#3357FF",
-    "#F1C40F",
-    "#9B59B6",
-    "#E74C3C",
-    "#7F8C8D",
+    "#000000", // Black
+    "#FFFFFF", // White
+    "#FF5733", // Vibrant Orange
+    "#33FF57", // Bright Green
+    "#3357FF", // Royal Blue
+    "#F1C40F", // Golden Yellow
+    "#9B59B6", // Purple
+    "#E74C3C", // Red
   ];
+
+
 
   const clearCanvas = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "#1a1a1a"; // Dark background after clearing
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     setElements([]);
   };
@@ -57,53 +74,27 @@ const RoomPage = ({ user, socket }) => {
   };
 
   return (
-    <div className="bg-slate-400 flex flex-col h-screen items-center">
-      {/* User Toggle Button */}
-      {/* 
-      <button
-        type="button"
-        className="btn btn-dark position-absolute top-0 left-0 bg-blue-200"
-        onClick={() => setOpenedUserTab(!openedUserTab)}
-      >
-        Users
-      </button>
-      {openedUserTab && (
-        <div className="bg-white flex flex-col items-center m-2 rounded-lg font-mono text-1xl h-12 w-4/6 text-gray-500 px-2 border-gray-500 border">
-          <h1 className="text-2xl text-black font-mono">Users</h1>
-          {users.map((usr) => (
-            <div key={usr.userId} className="flex justify-between items-center w-full">
-              <p>
-                {usr.name} {user && user.userId === usr.userId && "(You)"}
-              </p>
-              <p>{usr.presenter ? "Presenter" : "Viewer"}</p>
-            </div>
-          ))}
-        </div>
-      )}
-      */}
+    <div className="relative h-screen w-screen bg-gray-900">
 
-      {/* Whiteboard Header */}
-      {/* 
-      <h1 className="text-3xl text-white font-mono">
-        Room: {user?.roomId} Users: {users?.length}
-      </h1>
-      */}
 
-      {/* Toolbar */}
-        <div className="bg-white flex justify-between items-center m-2 rounded-full font-mono text-1xl h-12 w-4/6 text-gray-500 px-2 border-gray-500 border">
+
+        {/* Toolbar */}
+
+        <div className="toolbar-container fixed top-2 left-1/2 transform -translate-x-1/2 z-10 bg-gray-800 flex justify-between items-center rounded-full font-mono text-1xl h-12 w-5/6 text-white px-2 border-gray-700 border shadow-lg">
+
+         
           {/* Undo/Redo */}
+
           <div className="flex gap-2 justify-start items-center px-2">
             <IoIosUndo
-              className={`cursor-pointer h-5 w-5 hover:text-blue-500 ${
-                elements.length === 0 && "text-gray-300"
-              }`}
+              className={`cursor-pointer h-5 w-5 hover:text-blue-400 ${elements.length === 0 && "text-gray-500"
+                }`}
               title="Undo"
               onClick={Undo}
             />
             <IoIosRedo
-              className={`cursor-pointer h-5 w-5 hover:text-blue-500 ${
-                history.length === 0 && "text-gray-300"
-              }`}
+              className={`cursor-pointer h-5 w-5 hover:text-blue-400 ${history.length === 0 && "text-gray-500"
+                }`}
               title="Redo"
               onClick={Redo}
             />
@@ -112,41 +103,38 @@ const RoomPage = ({ user, socket }) => {
           {/* Tools */}
           <div className="flex justify-center items-center gap-2">
             <FaPencil
-              className={`cursor-pointer h-5 w-5 ${
-                tool === "pencil" && "text-blue-500"
-              }`}
+              className={`cursor-pointer h-5 w-5 ${tool === "pencil" ? "text-blue-400" : "text-white"
+                }`}
               title="Pencil"
               onClick={() => setTool("pencil")}
             />
             <MdLineWeight
-              className={`cursor-pointer h-5 w-5 ${
-                tool === "line" && "text-blue-500"
-              }`}
+              className={`cursor-pointer h-5 w-5 ${tool === "line" ? "text-blue-400" : "text-white"
+                }`}
               title="Line"
               onClick={() => setTool("line")}
             />
             <FaEraser
-              className={`cursor-pointer h-5 w-5 ${
-                tool === "eraser" && "text-blue-500"
-              }`}
+              className={`cursor-pointer h-5 w-5 ${tool === "eraser" ? "text-blue-400" : "text-white"
+                }`}
               title="Eraser"
               onClick={() => setTool("eraser")}
             />
 
             {/* Color Picker */}
-            <div className="color-picker-container">
+            <div className="relative">
               <IoIosColorPalette
                 onClick={() => setShowColorPicker(!showColorPicker)}
-                className="cursor-pointer h-5 w-5 color-picker-button"
+                className="cursor-pointer h-5 w-5"
                 title="Color Picker"
                 style={{ color }}
               />
               {showColorPicker && (
-                <div className="color-picker-dropdown">
+                <div className="absolute top-8 left-0 bg-gray-800 p-2 rounded-md shadow-md flex gap-1">
                   {availableColors.map((clr) => (
                     <div
                       key={clr}
-                      className="color-option"
+                      className="w-6 h-6 rounded-full cursor-pointer border border-gray-500"
                       style={{ backgroundColor: clr }}
                       onClick={() => handleColorSelect(clr)}
                     ></div>
@@ -156,16 +144,14 @@ const RoomPage = ({ user, socket }) => {
             </div>
 
             <FaShapes
-              className={`cursor-pointer h-5 w-5 ${
-                tool === "rectangle" && "text-blue-500"
-              }`}
+              className={`cursor-pointer h-5 w-5 ${tool === "rectangle" ? "text-blue-400" : "text-white"
+                }`}
               title="Rectangle"
               onClick={() => setTool("rectangle")}
             />
             <TbTextResize
-              className={`cursor-pointer h-5 w-5 ${
-                tool === "text" && "text-blue-500"
-              }`}
+              className={`cursor-pointer h-5 w-5 ${tool === "text" ? "text-blue-400" : "text-white"
+                }`}
               title="Text Box"
               onClick={() => setTool("text")}
             />
@@ -174,17 +160,27 @@ const RoomPage = ({ user, socket }) => {
           {/* Clear Button */}
           <div className="flex gap-1 justify-end">
             <button
-              className="bg-red-500 px-2 rounded-full text-white h-8"
+              className="bg-red-500 px-2 rounded-full text-white h-8 hover:bg-red-700"
               onClick={clearCanvas}
             >
               Clear
             </button>
           </div>
+
+           {/* User Info */}
+           <div className="flex items-center space-x-2 hover:opacity-80 transition duration-200">
+           <img src={user?.photoURL} alt="User Avatar" className="w-10 h-10 rounded-full border border-gray-600 shadow-md" />
+           <span className="hidden sm:inline-block font-semibold">{user?.displayName || "User"}</span>
+         </div>
+
         </div>
-  
+
+      
+
+     
 
       {/* Whiteboard */}
-      <div className="bg-white flex flex-col justify-center items-center border-red-600 rounded-lg h-5/6 w-5/6 p-0">
+      <div className="whiteboard-container absolute top-0 left-0 w-full h-full">
         <WhiteBoard
           canvasRef={canvasRef}
           ctxRef={ctxRef}
@@ -192,7 +188,6 @@ const RoomPage = ({ user, socket }) => {
           setElements={setElements}
           tool={tool}
           color={color}
-          socket={socket}
         />
       </div>
     </div>
