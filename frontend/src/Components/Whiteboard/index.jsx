@@ -15,13 +15,6 @@ const WhiteBoard = ({
     socket
 }) => {
 
-    const [img, setImg] = useState(null);
-
-    useEffect(()=>{
-        socket.on("whiteboardDataResponse", (data)=>{
-            setImg(data.imgURL);
-        });
-    },[]);
     
     // if(false){
     //     return (
@@ -36,8 +29,6 @@ const WhiteBoard = ({
     
     const [isDrawing, setIsDrawing] = useState(false);
    
-
-    
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -111,8 +102,7 @@ const WhiteBoard = ({
             }
         });
 
-        const canvasImage = canvasRef.current.toDataURL();
-        socket.emit("whiteboardData", canvasImage );
+     
 
     }
     }, [elements]);
@@ -222,7 +212,7 @@ const WhiteBoard = ({
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
-            className="bg-white rounded-lg border-gray-500 border-1 p-0 overflow-hidden h-100 w-100 cursor-crosshair"
+            className="bg-white rounded-lg border-gray-500 border-1 p-0 overflow-hidden h-screen w-screen cursor-crosshair"
         >
             <canvas ref={canvasRef}></canvas>
         </div>
