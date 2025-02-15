@@ -1,27 +1,16 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect  } from "react";
 import { IoIosUndo, IoIosRedo, IoIosColorPalette } from "react-icons/io";
 import { FaPencil, FaEraser, FaShapes } from "react-icons/fa6";
 import { MdLineWeight } from "react-icons/md";
 import { TbTextResize } from "react-icons/tb";
 import WhiteBoard from "../../Components/Whiteboard";
 import { useAuth } from "../../AuthContext";
+import { db } from "../../firebaseConfig";
 import "./index.css";
 
-import io from "socket.io-client"
-
-const server = "http://localhost:5000"
-const connectionOptions = {
-  "force new connection": true,
-  "reconnectionAttempts": "Infinity",
-  "timeout": 10000,
-  "transports": ["websocket"]
-}
-
-const socket = io(server, connectionOptions)
 
 const RoomPage = () => {
   const { user } = useAuth();
-  console.log("inside roomc" , user)
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
 
@@ -30,6 +19,7 @@ const RoomPage = () => {
   const [elements, setElements] = useState([]);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [history, setHistory] = useState([]);
+  const [roomName, setRoomName] = useState("Unknown Room");
 
   const availableColors = [
     "#000000", // Black
@@ -41,7 +31,6 @@ const RoomPage = () => {
     "#9B59B6", // Purple
     "#E74C3C", // Red
   ];
-
 
 
   const clearCanvas = () => {
@@ -75,7 +64,6 @@ const RoomPage = () => {
 
   return (
     <div className="relative h-screen w-screen bg-gray-900">
-
 
 
         {/* Toolbar */}
@@ -171,13 +159,10 @@ const RoomPage = () => {
            <div className="flex items-center space-x-2 hover:opacity-80 transition duration-200">
            <img src={user?.photoURL} alt="User Avatar" className="w-10 h-10 rounded-full border border-gray-600 shadow-md" />
            <span className="hidden sm:inline-block font-semibold">{user?.displayName || "User"}</span>
-         </div>
+           </div>
 
         </div>
 
-      
-
-     
 
       {/* Whiteboard */}
       <div className="whiteboard-container absolute top-0 left-0 w-full h-full">

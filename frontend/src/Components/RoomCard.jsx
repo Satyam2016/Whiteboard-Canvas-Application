@@ -12,14 +12,14 @@ export default function RoomCard({ room }) {
 
   // Function to copy Room ID
   const copyRoomId = () => {
-    navigator.clipboard.writeText(room.id);
+    navigator.clipboard.writeText(room.roomId);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
   // Navigate to the room
   const enterRoom = () => {
-    navigate(`/room/${room.id}`);
+    navigate(`/room/${room.roomId}`);
   };
 
   // Fetch the owner's display name from Firestore

@@ -2,13 +2,28 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { db } from "../firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
+import cors from "cors";
+
+// Fetch Room Data
+
 
 export default function JoinRoomForm() {
   const [roomId, setRoomId] = useState("");
   const navigate = useNavigate();
 
+  const fetchRoomData = async (roomId) => {
+    try {
+      const response = await fetch(`http://localhost:5001/room/${roomId.trim()}`);
+      if(!response.ok) {
+        return null;
+      }
+      return await response.json(); 
+    } catch (error) {
+      console.error("Error fetching room data:", error);
+      return null;
+    }
+  };
+  
   // Join an existing room (Check if Room ID exists)
   const joinRoom = async () => {
     if (!roomId.trim()) {
@@ -16,23 +31,24 @@ export default function JoinRoomForm() {
         icon: "warning",
         title: "Invalid Room ID",
         text: "Please enter a valid Room ID.",
-        timer: 3500, // Auto close after 3.5 seconds
-        timerProgressBar: true, // Show progress bar
+        timer: 3500,
+        timerProgressBar: true,
         showConfirmButton: false,
       });
       return;
     }
 
     try {
-      const roomRef = doc(db, "Rooms", roomId);
-      const roomSnap = await getDoc(roomRef);
+      const roomData = await fetchRoomData(roomId);
 
-      if (roomSnap.exists()) {
+      console.log("roomData in join", roomData);
+
+      if (roomData) {
         Swal.fire({
           icon: "success",
           title: "Room Found!",
           text: "Redirecting you to the room...",
-          timer: 3000, // Auto close after 3 seconds
+          timer: 3000,
           timerProgressBar: true,
           showConfirmButton: false,
         });
@@ -45,7 +61,7 @@ export default function JoinRoomForm() {
           icon: "error",
           title: "Room Not Found",
           text: "The Room ID you entered does not exist!",
-          timer: 4000, // Auto close after 4 seconds
+          timer: 4000,
           timerProgressBar: true,
           showConfirmButton: false,
         });
@@ -56,7 +72,7 @@ export default function JoinRoomForm() {
         icon: "error",
         title: "Error",
         text: "Something went wrong. Please try again later!",
-        timer: 4000, // Auto close after 4 seconds
+        timer: 4000,
         timerProgressBar: true,
         showConfirmButton: false,
       });
