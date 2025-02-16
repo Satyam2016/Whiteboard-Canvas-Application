@@ -36,8 +36,10 @@ const RoomPage = () => {
   const clearCanvas = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "#1a1a1a"; // Dark background after clearing
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+    // Clear only the drawings
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
     setElements([]);
   };
 

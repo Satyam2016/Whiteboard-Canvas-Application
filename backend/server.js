@@ -23,32 +23,49 @@ app.get('/', (req, res) => {
     res.send('Main Server is ready');
 });
 
-let roomIdGlobal, imgURLGlobal;
 
-io.on('connection', (socket) => {
-    socket.on('UserJoined', (roomData) => {
-        console.log('UserJoined', roomData);
-        roomIdGlobal = roomData.roomId;
-        socket.join(roomData.roomId);
-        const users = addUser(roomData);
-        socket.emit("userIsJoined", { success: true, users });
-        socket.broadcast.to(roomData.roomId).emit("allUsers", users);
-        socket.broadcast.to(roomData.roomId).emit('whiteboardDataResponse', {
-            imgURL: imgURLGlobal,
-        });
+io.on("connection", (socket) => {
+    console.log(`User connected: ${socket.id}`);
+
+    socket.on("joinRoom", ({ username, roomId }) => {
+        socket.join(roomId);
+        console.log(`${username} joined room ${roomId}`);
+
+        if (!rooms[roomId]) {
+            rooms[roomId] = [];
+        }
+        rooms[roomId].push({ id: socket.id, username });
+
+        io.to(roomId).emit("roomUsers", rooms[roomId]); // Notify all users
     });
 
-    socket.on('whiteboardData', (data) => {
-        imgURLGlobal = data;
-        socket.broadcast.to(roomIdGlobal).emit('whiteboardDataResponse', {
-            imgURL: data,
-        });
+    socket.on("leaveRoom", ({ username, roomId }) => {
+        socket.leave(roomId);
+        console.log(`${username} left room ${roomId}`);
+
+        if (rooms[roomId]) {
+            rooms[roomId] = rooms[roomId].filter(user => user.id !== socket.id);
+            io.to(roomId).emit("roomUsers", rooms[roomId]);
+        }
     });
 
-    socket.on('newUserJoined', (data) => {
-        console.log("New User Joined", data);
+    socket.on("draw", ({ roomId, strokeData }) => {
+        socket.broadcast.to(roomId).emit("drawResponse", strokeData);
+    });
+
+    socket.on("clearBoard", (roomId) => {
+        io.to(roomId).emit("clearBoardResponse");
+    });
+
+    socket.on("disconnect", () => {
+        console.log("User disconnected:", socket.id);
+        for (let roomId in rooms) {
+            rooms[roomId] = rooms[roomId].filter(user => user.id !== socket.id);
+            io.to(roomId).emit("roomUsers", rooms[roomId]);
+        }
     });
 });
+
 
 const PORT1 = process.env.PORT || 5000;
 server.listen(PORT1, () => {
