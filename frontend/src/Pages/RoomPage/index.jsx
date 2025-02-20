@@ -7,6 +7,8 @@ import WhiteBoard from "../../Components/Whiteboard";
 import { useAuth } from "../../AuthContext";
 import { db } from "../../firebaseConfig";
 import "./index.css";
+import Swal from "sweetalert2";
+import UserJoinedNotify from "../../Components/UserJoinedNotify";
 
 
 const RoomPage = () => {
@@ -66,7 +68,6 @@ const RoomPage = () => {
 
   return (
     <div className="relative h-screen w-screen bg-gray-900">
-
 
         {/* Toolbar */}
 
@@ -164,6 +165,8 @@ const RoomPage = () => {
            </div>
 
         </div>
+
+        < UserJoinedNotify />
 
 
       {/* Whiteboard */}

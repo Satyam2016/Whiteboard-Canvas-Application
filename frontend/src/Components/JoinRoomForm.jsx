@@ -3,6 +3,9 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import cors from "cors";
+import socket from "../socket";
+import { useAuth } from "../AuthContext";
+
 
 // Fetch Room Data
 
@@ -10,6 +13,8 @@ import cors from "cors";
 export default function JoinRoomForm() {
   const [roomId, setRoomId] = useState("");
   const navigate = useNavigate();
+
+  const { user } = useAuth();
 
   const fetchRoomData = async (roomId) => {
     try {
@@ -53,9 +58,12 @@ export default function JoinRoomForm() {
           showConfirmButton: false,
         });
 
+        socket.emit("createJoinRoom", { roomID: roomId, userID: user.uid });
         setTimeout(() => {
           navigate(`/room/${roomId}`);
         }, 3000);
+        
+
       } else {
         Swal.fire({
           icon: "error",

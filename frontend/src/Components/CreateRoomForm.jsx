@@ -5,8 +5,7 @@ import uuid from "../uuid"
 import {db} from "../firebaseConfig"
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { useAuth } from "../AuthContext";
-import { reload } from "firebase/auth";
-
+import socket from "../socket";
 
 export default function CreateRoomForm({
   setRooms,
@@ -42,6 +41,9 @@ export default function CreateRoomForm({
             snapshot: "",
           });
           setRooms([...rooms, { id: docRef.id, name: roomName, owner: user.uid, members: [user.uid] }]);
+
+          socket.emit("createJoinRoom", { roomID: roomId, userID: user.uid });
+          
           setRoomName("");
           setRoomId("");
           window.location.reload();

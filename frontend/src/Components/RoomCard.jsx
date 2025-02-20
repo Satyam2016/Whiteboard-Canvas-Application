@@ -4,12 +4,15 @@ import { motion } from "framer-motion";
 import { FaRegCopy } from "react-icons/fa";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
+import socket from "../socket";
+import { useAuth } from "../AuthContext";
 
 export default function RoomCard({ room }) {
   const [copied, setCopied] = useState(false);
   const [ownerName, setOwnerName] = useState("Unknown User");
   const navigate = useNavigate();
 
+  const { user } = useAuth();
   // Function to copy Room ID
   const copyRoomId = () => {
     navigator.clipboard.writeText(room.roomId);
@@ -19,6 +22,7 @@ export default function RoomCard({ room }) {
 
   // Navigate to the room
   const enterRoom = () => {
+    socket.emit("createJoinRoom", { roomID: room.roomId, userID: user.uid });
     navigate(`/room/${room.roomId}`);
   };
 

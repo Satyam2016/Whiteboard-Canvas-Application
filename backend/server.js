@@ -4,6 +4,7 @@ const http = require('http');
 const { db } = require('./firebaseConfig');
 const { Server } = require("socket.io");
 const roomRoutes = require("./routes/roomRoutes");
+const admin = require("firebase-admin");
 
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/user');
 
@@ -24,47 +25,71 @@ app.get('/', (req, res) => {
 });
 
 
+// Socket.io connection
 io.on("connection", (socket) => {
     console.log(`User connected: ${socket.id}`);
 
-    socket.on("joinRoom", ({ username, roomId }) => {
-        socket.join(roomId);
-        console.log(`${username} joined room ${roomId}`);
+    socket.on("createJoinRoom", async ({ roomID, userID }) => {
+        const roomRef = db.collection("Channels").doc(roomID);
+        const doc = await roomRef.get();
 
-        if (!rooms[roomId]) {
-            rooms[roomId] = [];
+        if (!doc.exists) {
+            await roomRef.set({
+                createdAt: new Date().toISOString(),
+                users: {}  // Map of users
+            });
+            console.log(`Room ${roomID} created`);
         }
-        rooms[roomId].push({ id: socket.id, username });
 
-        io.to(roomId).emit("roomUsers", rooms[roomId]); // Notify all users
+        socket.join(roomID);
+
+    
+        await roomRef.update({
+            [`users.${userID}`]: socket.id  // Map userID to socketID
+        });
+
+        console.log(`User ${userID} joined room ${roomID}`);
+        socket.emit("roomJoined", roomID);
+        io.to(roomID).emit("userJoined", { userID, socketID: socket.id }); // Notify others
     });
 
-    socket.on("leaveRoom", ({ username, roomId }) => {
-        socket.leave(roomId);
-        console.log(`${username} left room ${roomId}`);
 
-        if (rooms[roomId]) {
-            rooms[roomId] = rooms[roomId].filter(user => user.id !== socket.id);
-            io.to(roomId).emit("roomUsers", rooms[roomId]);
-        }
+    socket.on("sendMessage", ({ roomID, message, userID }) => {
+        io.to(roomID).emit("receiveMessage", { userID, message });
     });
 
-    socket.on("draw", ({ roomId, strokeData }) => {
-        socket.broadcast.to(roomId).emit("drawResponse", strokeData);
-    });
 
-    socket.on("clearBoard", (roomId) => {
-        io.to(roomId).emit("clearBoardResponse");
-    });
 
-    socket.on("disconnect", () => {
-        console.log("User disconnected:", socket.id);
-        for (let roomId in rooms) {
-            rooms[roomId] = rooms[roomId].filter(user => user.id !== socket.id);
-            io.to(roomId).emit("roomUsers", rooms[roomId]);
-        }
+
+    // disconnect
+    socket.on("disconnect", async () => {
+        console.log(`User disconnected: ${socket.id}`);
+    
+        const roomsRef = db.collection("Channels");
+        const roomsSnapshot = await roomsRef.get();
+    
+        roomsSnapshot.forEach(async (roomDoc) => {
+            const roomData = roomDoc.data();
+            const users = roomData.users;
+    
+            for (const [userID, socketID] of Object.entries(users)) {
+                if (socketID === socket.id) {
+                    // Remove only the user, not the room
+                    await roomDoc.ref.update({
+                        [`users.${userID}`]: admin.firestore.FieldValue.delete()
+                    });
+    
+                    console.log(`Removed user ${userID} from room ${roomDoc.id}`);
+                    io.to(roomDoc.id).emit("userLeft", { userID });
+    
+                    break;
+                }
+            }
+        });
     });
+    
 });
+
 
 
 const PORT1 = process.env.PORT || 5000;
@@ -90,4 +115,3 @@ server2.listen(PORT2, () => {
 
 });
 
-// Use room routes

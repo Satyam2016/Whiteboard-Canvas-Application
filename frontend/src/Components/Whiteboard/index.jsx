@@ -34,7 +34,26 @@ const WhiteBoard = ({
     const [isViewer, setIsViewer] = useState(false);  // To track if the user is a viewer
 
     const {roomid} = useParams();
-    console.log("roomId in whiteboard", roomid);
+    
+    const username = user.displayName;
+    const userid = user.uid;
+
+
+
+
+    useEffect(() => {
+       
+    }, [roomid, username, userid]);
+
+    const handleDraw = (elements) => {
+        console.log("Drawing in whiteboard", elements);
+        socket.emit("draw", { roomid, elements });
+    };
+
+    useEffect(()=>{
+        handleDraw(elements);
+
+    }, [elements]);
 
     
 
@@ -126,6 +145,7 @@ const WhiteBoard = ({
                 }
             });
         }
+
     }, [elements]);
 
     // Prevent non-members from drawing
@@ -239,7 +259,7 @@ const WhiteBoard = ({
             className={`bg-white rounded-lg border-gray-500 border-1 p-0 overflow-hidden h-screen w-screen 
                         ${isViewer ? "cursor-not-allowed" : "cursor-crosshair"}`}
         >
-            <canvas ref={canvasRef}></canvas>
+            <canvas   ref={canvasRef}></canvas>
             {isViewer && (
                 <div className="absolute top-4 left-1 bg-red-500 text-white px-4 py-2 rounded-lg">
                     View-Only Mode
