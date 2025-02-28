@@ -7,8 +7,8 @@ import WhiteBoard from "../../Components/Whiteboard";
 import { useAuth } from "../../AuthContext";
 import { db } from "../../firebaseConfig";
 import "./index.css";
-import Swal from "sweetalert2";
 import UserJoinedNotify from "../../Components/UserJoinedNotify";
+import Chatbox from "../../Components/Chatbox";
 
 
 const RoomPage = () => {
@@ -167,8 +167,12 @@ const RoomPage = () => {
         </div>
 
         < UserJoinedNotify />
+        <div className="absolute top-0 left-0  h-full z-10">
+        <Chatbox />
 
-
+        </div>
+        
+        
       {/* Whiteboard */}
       <div className="whiteboard-container absolute top-0 left-0 w-full h-full">
         <WhiteBoard
