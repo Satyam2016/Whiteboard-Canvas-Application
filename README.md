@@ -1,42 +1,77 @@
+
+# Whiteboard-Canvas-Application
+
 Designed and built a real-time AI-powered collaborative whiteboard using React, Firebase, Rough.js, and WebRTC for a seamless multi-user experience. The whiteboard features:
 
-✅ Real-time Drawing & Collaboration – Multiple users can draw and edit in sync using Firebase Firestore’s real-time updates.
+#
 
-✅ Advanced Drawing Tools – Supports freehand, shapes (rectangles, circles, lines), stroke styles, and colors powered by Rough.js.
+## Real-time Drawing & Collaboration – Multiple users can draw and edit in sync using Firebase Firestore’s real-time updates.
 
-✅ Authentication & Session Management – Secure login via Google OAuth (Firebase Auth) and private/shared sessions.
+-  Advanced Drawing Tools – Supports freehand, shapes (rectangles, circles, lines), stroke styles, and colors powered by Rough.js.
 
-✅ Undo/Redo & Version Control – Implemented action history tracking for improved usability.
+- Authentication & Session Management – Secure login via Google OAuth (Firebase Auth) and private/shared sessions.
 
-✅ AI-Powered Features (Upcoming) – Leveraging AI for handwriting recognition and shape auto-correction.
+- Undo/Redo & Version Control – Implemented action history tracking for improved usability.
 
-✅ Multi-Device Compatibility – Optimized for desktop & tablet use with touch and stylus support.
+- AI-Powered Features (Upcoming) – Leveraging AI for handwriting recognition and shape auto-correction.
 
-✅ Upcoming AI Features – Handwriting recognition & shape auto-correction using AI models.
+- Multi-Device Compatibility – Optimized for desktop & tablet use with touch and stylus support.
+
+- Upcoming AI Features – Handwriting recognition & shape auto-correction using AI models.
+
+## Tech Stack
+
+- **Frontend:** React (Vite)
+
+- **Backend:** Node.js (Express.js)
+
+- **WebSockets:** Socket.io
+
+- **Database:** Firebase Firestore
+
+- **Authentication:** Firebase Authentication
 
 
-Future enhancements include WebRTC-based voice/video chat, AI-assisted sketch enhancement, and exporting whiteboard sessions as PDFs.
+# Installation
+
+### Backend Setup
+
+1. Install dependencies:
+
+```bash
+cd backend
+npm install
+```
+
+2. Run the backend:
+
+```bash
+node server.js
+```
+
+### Frontend Setup
+
+1. Install dependencies:
+
+```bash
+cd frontend
+npm install
+```
+
+2. Run the backend:
+
+```bash
+npm run dev
+```
 
 
+    
+## Usage
 
-📌 Tech Stack:
+- Open the application in the browser.
 
-Frontend:
+- Login or create an account.
 
-✅ React.js – Core framework for UI development
+- Start drawing on the canvas.
 
-✅ Tailwind CSS – For responsive styling
-
-✅ Rough.js – Hand-drawn style shapes & freehand drawing
-
-
-Backend & Real-Time Collaboration:
-
-✅ Firebase Firestore – Real-time database for drawing updates
-
-✅ Firebase Authentication – Secure login & user session management
-
-✅ Socket.io (WebSockets) – Ensures ultra-low latency collaboration
-
-✅ Express.js (Optional for API Handling) – Manages backend services
-
+- Invite others for real-time collaboration.
