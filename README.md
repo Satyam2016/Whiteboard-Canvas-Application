@@ -4,8 +4,9 @@
 Designed and built a real-time AI-powered collaborative whiteboard using React, Firebase, Rough.js, and WebRTC for a seamless multi-user experience. The whiteboard features:
 
 #
+## Key Features
 
-## Real-time Drawing & Collaboration – Multiple users can draw and edit in sync using Firebase Firestore’s real-time updates.
+- Real-time Drawing & Collaboration – Multiple users can draw and edit in sync using Firebase Firestore’s real-time updates.
 
 -  Advanced Drawing Tools – Supports freehand, shapes (rectangles, circles, lines), stroke styles, and colors powered by Rough.js.
 
