@@ -59,16 +59,57 @@ const WhiteBoard = ({ canvasRef, ctxRef, elements, setElements, color, tool }) =
     }, [elements]);
 
     useLayoutEffect(() => {
-        if (canvasRef.current) {
+        if (canvasRef) {
             const roughCanvas = rough.canvas(canvasRef.current);
+
+            if (elements.length > 0) {
+                ctxRef.current.clearRect(
+                    0,
+                    0,
+                    canvasRef.current.width,
+                    canvasRef.current.height
+                );
+            }
 
             elements.forEach((ele) => {
                 if (ele.type === "rectangle") {
-                    roughCanvas.draw(roughGenerator.rectangle(ele.offsetX, ele.offsetY, ele.width - ele.offsetX, ele.height - ele.offsetY, { stroke: ele.stroke, strokeWidth: 2, roughness: 0 }));
+                    const rectWidth = ele.width - ele.offsetX;
+                    const rectHeight = ele.height - ele.offsetY;
+                    roughCanvas.draw(
+                        roughGenerator.rectangle(
+                            ele.offsetX,
+                            ele.offsetY,
+                            rectWidth,
+                            rectHeight,
+                            {
+                                stroke: ele.stroke,
+                                strokeWidth: 2,
+                                roughness: 0,
+                            }
+                        )
+                    );
                 } else if (ele.type === "pencil") {
-                    roughCanvas.linearPath(ele.path, { stroke: ele.stroke, strokeWidth: 1, roughness: 0 });
+                    roughCanvas.linearPath(ele.path,
+                        {
+                            stroke: ele.stroke,
+                            strokeWidth: 2,
+                            roughness: 0,
+                        }
+                    );
                 } else if (ele.type === "line") {
-                    roughCanvas.draw(roughGenerator.line(ele.offsetX, ele.offsetY, ele.width, ele.height, { stroke: ele.stroke, strokeWidth: 2, roughness: 0 }));
+                    roughCanvas.draw(
+                        roughGenerator.line(
+                            ele.offsetX,
+                            ele.offsetY,
+                            ele.width,
+                            ele.height,
+                            {
+                                stroke: ele.stroke,
+                                strokeWidth: 2,
+                                roughness: 0,
+                            }
+                        )
+                    );
                 }
             });
         }
@@ -92,6 +133,8 @@ const WhiteBoard = ({ canvasRef, ctxRef, elements, setElements, color, tool }) =
             window.removeEventListener("beforeunload", handleBeforeUnload);
         };
     }, [roomid, user]);
+
+
     
     const updateElements = (updateFunc) => {
         setElements((prevElements) => {
