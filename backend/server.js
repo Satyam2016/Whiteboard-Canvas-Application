@@ -50,27 +50,27 @@ io.on("connection", (socket) => {
             io.to(roomID).emit("userJoined", { userID, socketID: socket.id });
 
         } catch (error) {
-            console.error(`🔥 Error in createJoinRoom: ${error}`);
+            console.error(` Error in createJoinRoom: ${error}`);
         }
     });
 
-    // ✅ Message handling
+    // Message handling
     socket.on("sendMessage", ({ roomID, message, userID, userName }) => {
         console.log(`💬 Message from ${userName}: "${message}" in Room ${roomID}`);
         io.in(roomID).emit("receiveMessage", { userID, message, userName });
     });
 
-    // ✅ Drawing synchronization
+    // Drawing synchronization
     socket.on("draw", async ({ roomID, elements }) => {
         try {
             io.to(roomID).emit("receiveDraw", elements);
         } catch (error) {
-            console.error(`🔥 Error in draw event: ${error}`);
+            console.error(`Error in draw event: ${error}`);
         }
     });
 
     socket.on("disconnect", async () => {
-        console.log(`🔴 User disconnected: ${socket.id}`);
+        console.log(`User disconnected: ${socket.id}`);
 
         const roomsRef = db.collection("Channels");
         const roomsSnapshot = await roomsRef.get();
@@ -82,7 +82,7 @@ io.on("connection", (socket) => {
             for (const [userID, socketID] of Object.entries(users)) {
                 if (socketID === socket.id) {
                     await roomDoc.ref.update({ [`users.${userID}`]: admin.firestore.FieldValue.delete() });
-                    console.log(`👋 Removed user ${userID} from Room ${roomDoc.id}`);
+                    console.log(` Removed user ${userID} from Room ${roomDoc.id}`);
                     io.to(roomDoc.id).emit("userLeft", { userID });
                     break;
                 }
