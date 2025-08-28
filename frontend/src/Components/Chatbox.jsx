@@ -25,7 +25,7 @@ const Chatbox = () => {
             roomID: roomid,
             message,
             userID: user.uid,
-            userName: user.displayName,
+            userName: user.displayName.split(" ").slice(0, 2).join(" "),
         });
 
         
@@ -62,22 +62,22 @@ const Chatbox = () => {
             {isOpen && (
                 <div className="w-72 h-[500px] bg-white rounded-lg shadow-lg overflow-hidden fixed bottom-5 left-5 z-10 flex flex-col">
                     {/* Chat Header */}
-                    <div className="flex justify-between items-center bg-blue-300 text-white p-3">
-                        <h2 className="text-lg">Chat</h2>
+                    <div className="flex justify-between items-center bg-blue-300 text-white p-1">
+                        <h2 className="text-xs">Chat</h2>
                         <button
-                            className="cursor-pointer bg-blue-300 hover:scale-125 hover:bg-blue-400"
+                            className="cursor-pointer text-red-700 bg-blue-300 hover:scale-125 hover:bg-blue-400"
                             onClick={() => setIsOpen(false)}
                         >
-                            ❌
+                            Close
                         </button>
                     </div>
 
                     {/* Chat Messages */}
-                    <div className="flex-1 overflow-y-auto p-3 bg-gray-50 custom-scrollbar">
+                    <div className="flex-1 overflow-y-auto p-3 bg-gray-50 text-xs custom-scrollbar space-y-1">
                         {messages.map((msg, i) => (
                             <div
                                 key={i}
-                                className={`p-2 rounded-lg w-fit mb-2 ${
+                                className={`p-1 rounded-lg w-fit ${
                                     msg.sender === "You"
                                         ? "bg-blue-500 text-white self-end text-right ml-auto"
                                         : "bg-gray-300 text-black"
