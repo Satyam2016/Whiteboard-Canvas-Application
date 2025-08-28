@@ -68,13 +68,7 @@ const RoomPage = () => {
 
   return (
     <div className="relative h-screen w-screen bg-gray-900">
-
-        {/* Toolbar */}
-
         <div className="toolbar-container fixed top-2 left-1/2 transform -translate-x-1/2 z-10 bg-gray-800 flex justify-between items-center rounded-full font-mono text-1xl h-12 w-5/6 text-white px-2 border-gray-700 border shadow-lg">
-
-         
-          {/* Undo/Redo */}
 
           <div className="flex gap-2 justify-start items-center px-2">
             <IoIosUndo
@@ -91,7 +85,6 @@ const RoomPage = () => {
             />
           </div>
 
-          {/* Tools */}
           <div className="flex justify-center items-center gap-2">
             <FaPencil
               className={`cursor-pointer h-5 w-5 ${tool === "pencil" ? "text-blue-400" : "text-white"
@@ -112,7 +105,6 @@ const RoomPage = () => {
               onClick={() => setTool("eraser")}
             />
 
-            {/* Color Picker */}
             <div className="relative">
               <IoIosColorPalette
                 onClick={() => setShowColorPicker(!showColorPicker)}
@@ -174,7 +166,7 @@ const RoomPage = () => {
         
         
       {/* Whiteboard */}
-      <div className="whiteboard-container absolute top-0 left-0 w-full h-full">
+      <div className="whiteboard-container absolute top-0 left-0 center w-full h-full ">
         <WhiteBoard
           canvasRef={canvasRef}
           ctxRef={ctxRef}

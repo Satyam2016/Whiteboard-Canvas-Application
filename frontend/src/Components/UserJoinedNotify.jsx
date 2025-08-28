@@ -5,10 +5,11 @@ import Swal from "sweetalert2";
 
 export default function UserJoinedNotify(){
     const { user } = useAuth();
+    console.log(user)
 
     useEffect(() => {
         socket.on("userJoined", ({ userID }) => {
-            if (userID !== user.id) {
+            if (userID !== user.uid) {
                 Swal.fire({
                     title: "New User Joined!",
                     text: `${user.displayName} has joined the room.`,
